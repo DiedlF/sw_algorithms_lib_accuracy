@@ -224,6 +224,25 @@ void format_PLARB ( float voltage, char * &p)
   p = NMEA_append_tail ( line_start);
 }
 
+ROM char PLAGD[]="$PLAGD,";
+
+//! D-GNSS accuracy data: accN, accE, accD (m), accLen (m), accHeading (deg)
+void format_PLAGD ( const D_GNSS_coordinates_t &c, char * &p)
+{
+  char * line_start = p;
+  append_string( p, PLAGD);
+  to_ascii_n_decimals( c.relPosAccN, 3, p);
+  *p++ = ',';
+  to_ascii_n_decimals( c.relPosAccE, 3, p);
+  *p++ = ',';
+  to_ascii_n_decimals( c.relPosAccD, 3, p);
+  *p++ = ',';
+  to_ascii_n_decimals( c.relPosAccLen, 3, p);
+  *p++ = ',';
+  to_ascii_n_decimals( c.relPosHeadingAcc * RAD_TO_DEGREE, 1, p);
+  p = NMEA_append_tail ( line_start);
+}
+
 ROM char PLARA[]="$PLARA,";
 
 void format_PLARA ( float roll, float pitch, float yaw, char * &p)
@@ -414,6 +433,10 @@ void format_NMEA_string_slow( const measurement_data_t &m, const D_GNSS_coordina
 
   // average wind
   format_PLARW (output_data.wind_average[NORTH], output_data.wind_average[EAST], 'A', next);
+
+  // D-GNSS accuracy data (only if heading fix available)
+  if (c.sat_fix_type & SAT_HEADING)
+    format_PLAGD( c, next);
 
 //  assert(   next - NMEA_buf.string < string_buffer_t::BUFLEN);
   NMEA_buf.length = next - NMEA_buf.string;

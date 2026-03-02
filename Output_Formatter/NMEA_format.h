@@ -30,6 +30,7 @@ enum PLARS_TYPES{
 void format_NMEA_string_fast( const state_vector_t &output_data, string_buffer_t &NMEA_buf, bool horizon_available);
 void format_NMEA_string_slow( const measurement_data_t &m, const D_GNSS_coordinates_t &c, const state_vector_t &output_data, string_buffer_t &NMEA_buf);
 void format_PLARS ( float value, PLARS_TYPES type, char * &p) ;
+void format_PLAGD ( const D_GNSS_coordinates_t &c, char * &p);
 bool NMEA_checksum( const char *line);
 
 #endif /* APPLICATION_NMEA_FORMAT_H_ */
