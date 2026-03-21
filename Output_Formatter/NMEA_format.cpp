@@ -434,9 +434,9 @@ void format_NMEA_string_slow( const measurement_data_t &m, const D_GNSS_coordina
   // average wind
   format_PLARW (output_data.wind_average[NORTH], output_data.wind_average[EAST], 'A', next);
 
-  // D-GNSS accuracy data (only if heading fix available)
-  if (c.sat_fix_type & SAT_HEADING)
-    format_PLAGD( c, next);
+  // D-GNSS accuracy data disabled temporarily for compatibility debugging
+  // if (c.sat_fix_type & SAT_HEADING)
+  //   format_PLAGD( c, next);
 
 //  assert(   next - NMEA_buf.string < string_buffer_t::BUFLEN);
   NMEA_buf.length = next - NMEA_buf.string;
