@@ -28,6 +28,7 @@
 #include "data_structures.h"
 #include "system_state.h"
 #include "CAN_gateway.h"
+#include "uSD_handler.h"
 
 #ifndef   ACQUIRE_GNSS_DATA_GUARD
 #define   ACQUIRE_GNSS_DATA_GUARD()
@@ -50,6 +51,7 @@ enum CAN_ID_SENSOR
   CAN_Id_Voltage_Circle	= 0x129,    //!< float supply voltage, uint8_t circle-mode
   CAN_Id_SystemState    = 0x12a,    //!< u32 system_state, u32 git_tag dec
   CAN_Id_Sensor_Health	= 0x12b,    //!< float magnetic disturbance
+  CAN_Id_SD_Status      = 0x12c,    //!< u8 sd/logging status flags
 
   CAN_Id_GPS_Date_Time	= 0x140,    //!< uint8_t year-2000, month, day, hour, mins, secs
   CAN_Id_GPS_Lat	= 0x141,    //!< double latitude
@@ -200,6 +202,11 @@ void CAN_output ( const measurement_data_t &m, const D_GNSS_coordinates_t &c, st
   p.dlc=8;
   p.data_w[0] = system_state;
   p.data_w[1] = GIT_TAG_DEC;
+  CAN_send(p, 1);
+
+  p.id=CAN_Id_SD_Status;
+  p.dlc=1;
+  p.data_b[0] = sensor_sd_status_flags;
   CAN_send(p, 1);
 }
 
